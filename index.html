@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"/>
@@ -34,6 +33,11 @@
       flex: 1 1 250px;
       display: flex;
       flex-direction: column;
+    }
+
+    /* Ajuste para melhor aproveitamento da primeira linha */
+    .form-row:first-of-type .form-group {
+      flex: 1 1 calc(50% - 15px);
     }
     label {
       font-weight: 600;
@@ -90,10 +94,7 @@
 <option value="vinc_dpp">VINCULAÇÃO – DPP</option>
 </select>
 </div>
-<div class="form-group">
-<label for="oc">OC. Nº:</label>
-<input id="oc" name="oc" type="text"/>
-</div>
+
 <div class="form-group">
 <label for="alvara">Alvará N.º:</label>
 <input id="alvara" name="alvara" type="text"/>
@@ -105,8 +106,12 @@
 <input id="nome" name="nome" type="text"/>
 </div>
 <div class="form-group">
-<label for="tnz">TNZ N.º:</label>
+<label for="tnz">TNZ ANTIGA:</label>
 <input id="tnz" name="tnz" type="text"/>
+</div>
+<div class="form-group">
+<label for="tnzNova">TNZ NOVA:</label>
+<input id="tnzNova" name="tnzNova" type="text"/>
 </div>
 <div class="form-group">
 <label for="processo">Processo Nº:</label>
@@ -123,10 +128,10 @@
 <script>
   const form = document.getElementById('formOcorrencia');
   const assunto = document.getElementById('assunto');
-  const oc = document.getElementById('oc');
-  const alvara = document.getElementById('alvara');
+    const alvara = document.getElementById('alvara');
   const nome = document.getElementById('nome');
   const tnz = document.getElementById('tnz');
+  const tnzNova = document.getElementById('tnzNova');
   const processo = document.getElementById('processo');
   const textoGerado = document.getElementById('textoGerado');
   const btnCopiar = document.getElementById('btnCopiar');
@@ -146,67 +151,71 @@
 
   function gerarTexto() {
     const { data, hora } = formatDataHora();
-    const ocVal = oc.value.trim() || '[OC. Nº]';
-    const alvaraVal = alvara.value.trim() || '[Alvará N.º]';
-    const nomeVal = nome.value.trim() || '[NOME]';
-    const tnzVal = tnz.value.trim() || '[TNZ N.º]';
-    const processoVal = processo.value.trim() || '[Processo N.º]';
+        const alvaraVal = (alvara.value.trim() || '[ALVARÁ N.º]').toUpperCase();
+    const nomeVal = (nome.value.trim() || '[NOME]').toUpperCase();
+    const tnzVal = (tnz.value.trim() || '[TNZ N.º]').toUpperCase();
+    const processoVal = (processo.value.trim() || '[PROCESSO N.º]').toUpperCase();
 
     let texto = '';
 
     switch (assunto.value) {
       case 'desvinculacao':
-        texto = `${ocVal} – Informa-se que o monitorado ${nomeVal} compareceu a esta Central de Monitoração Eletrônica (CME) no dia ${data}, às ${hora}, para a retirada do dispositivo de monitoração eletrônica (tornozeleira) de N.º ${tnzVal}, em cumprimento à decisão judicial proferida nos autos do processo nº ${processoVal}. A desvinculação foi formalizada por meio de Termo de Desvinculação, devidamente assinado pelo monitorado e pelo servidor responsável pelo procedimento, em conformidade com os protocolos institucionais vigentes.`;
+        texto = `INFORMA-SE QUE O MONITORADO ${nomeVal} COMPARECEU A ESTA CENTRAL DE MONITORAÇÃO ELETRÔNICA (CME) NO DIA ${data}, ÀS ${hora}, PARA A RETIRADA DO DISPOSITIVO DE MONITORAÇÃO ELETRÔNICA (TORNOZELEIRA) DE N.º ${tnzVal}, EM CUMPRIMENTO À DECISÃO JUDICIAL PROFERIDA NOS AUTOS DO PROCESSO Nº ${processoVal}. A DESVINCULAÇÃO FOI FORMALIZADA POR MEIO DE TERMO DE DESVINCULAÇÃO, DEVIDAMENTE ASSINADO PELO MONITORADO E PELO SERVIDOR RESPONSÁVEL PELO PROCEDIMENTO, EM CONFORMIDADE COM OS PROTOCOLOS INSTITUCIONAIS VIGENTES.`;
         break;
       case 'vinculacao':
-        texto = `${ocVal} – Informa-se que foi efetuado o procedimento de vinculação ao sistema Akiles do monitorado ${nomeVal}, nos termos do dispositivo nº ${tnzVal}, em cumprimento à determinação judicial constante nos autos do processo nº ${processoVal} e alvará nº ${alvaraVal}. Ademais, todos os documentos pertinentes ao referido procedimento foram digitalizados e devidamente arquivados na pasta do monitorado, disponível no Google Drive desta CME.`;
+        texto = `INFORMA-SE QUE FOI EFETUADO O PROCEDIMENTO DE VINCULAÇÃO AO SISTEMA AKILES DO MONITORADO ${nomeVal}, NOS TERMOS DO DISPOSITIVO Nº ${tnzVal}, EM CUMPRIMENTO À DETERMINAÇÃO JUDICIAL CONSTANTE NOS AUTOS DO PROCESSO Nº ${processoVal} E ALVARÁ Nº ${alvaraVal}. ADEMAIS, TODOS OS DOCUMENTOS PERTINENTES AO REFERIDO PROCEDIMENTO FORAM DIGITALIZADOS E DEVIDAMENTE ARQUIVADOS NA PASTA DO MONITORADO, DISPONÍVEL NO GOOGLE DRIVE DESTA CME.`;
         break;
       case 'vinc_jvd':
-        texto = `${ocVal} – Informa-se que foi efetuado o procedimento de vinculação ao sistema Akiles do monitorado ${nomeVal}, nos termos do dispositivo nº ${tnzVal}, em cumprimento à determinação judicial constante nos autos do processo nº ${processoVal} e alvará nº ${alvaraVal}, no âmbito do Juizado Especial de Violência Doméstica (JVD). Todos os documentos pertinentes ao referido procedimento foram digitalizados e armazenados na pasta do monitorado no Google Drive desta CME.`;
+        texto = `INFORMA-SE QUE FOI EFETUADO O PROCEDIMENTO DE VINCULAÇÃO AO SISTEMA AKILES DO MONITORADO ${nomeVal}, NOS TERMOS DO DISPOSITIVO Nº ${tnzVal}, EM CUMPRIMENTO À DETERMINAÇÃO JUDICIAL CONSTANTE NOS AUTOS DO PROCESSO Nº ${processoVal} E ALVARÁ Nº ${alvaraVal}, NO ÂMBITO DO JUIZADO ESPECIAL DE VIOLÊNCIA DOMÉSTICA (JVD). TODOS OS DOCUMENTOS PERTINENTES AO REFERIDO PROCEDIMENTO FORAM DIGITALIZADOS E ARMAZENADOS NA PASTA DO MONITORADO NO GOOGLE DRIVE DESTA CME.`;
         break;
       case 'vinc_dpp':
-        texto = `${ocVal} – Informa-se que foi efetuado o procedimento de vinculação ao sistema Akiles do monitorado ${nomeVal}, nos termos do dispositivo nº ${tnzVal}, em cumprimento à determinação judicial constante nos autos do processo nº ${processoVal} e alvará nº ${alvaraVal}, no âmbito da Delegacia de Polícia da Pessoa (DPP). Todos os documentos pertinentes ao referido procedimento foram digitalizados e arquivados na pasta do monitorado no Google Drive desta CME.`;
+        texto = `INFORMA-SE QUE FOI EFETUADO O PROCEDIMENTO DE VINCULAÇÃO AO SISTEMA AKILES DO MONITORADO ${nomeVal}, NOS TERMOS DO DISPOSITIVO Nº ${tnzVal}, EM CUMPRIMENTO À DETERMINAÇÃO JUDICIAL CONSTANTE NOS AUTOS DO PROCESSO Nº ${processoVal} E ALVARÁ Nº ${alvaraVal}, NO ÂMBITO DA DELEGACIA DE POLÍCIA DA PESSOA (DPP). TODOS OS DOCUMENTOS PERTINENTES AO REFERIDO PROCEDIMENTO FORAM DIGITALIZADOS E ARQUIVADOS NA PASTA DO MONITORADO NO GOOGLE DRIVE DESTA CME.`;
         break;
       case 'troca_tornozeleira':
-        texto = `${ocVal} – Informa-se que o monitorado ${nomeVal} compareceu a esta CME no dia ${data}, às ${hora}, para efetuar a troca/substituição da tornozeleira eletrônica N.º ${tnzVal}, em atendimento à decisão judicial referente ao processo nº ${processoVal}. O procedimento foi devidamente registrado e o novo dispositivo foi inserido no sistema Akiles.`;
+        const tnzNovaVal = (tnzNova.value.trim() || '[NOVA TNZ]').toUpperCase();
+        texto = `TROCA/SUBSTITUIÇÃO DE TORNOZELEIRA: INFORMA-SE QUE O MONITORADO ${nomeVal} COMPARECEU A ESTA CME NO DIA ${data}, ÀS ${hora.replace(':','H')}MIN, PARA REALIZAÇÃO DE TROCA/SUBSTITUIÇÃO DA TORNOZELEIRA ELETRÔNICA Nº ${tnzVal}. APÓS INSPEÇÃO TÉCNICA DO DISPOSITIVO, FOI CONSTATADA AVARIA NO PINO POWER JACK, MOTIVO PELO QUAL SE FEZ NECESSÁRIA A SUBSTITUIÇÃO DO EQUIPAMENTO. REGISTRA-SE QUE A NOVA TORNOZELEIRA INSTALADA PASSOU A SER A DE Nº ${tnzNovaVal}.`;
         break;
       case 'just_saida_zona':
-        texto = `${ocVal} – Informa-se que compareceu a esta CME o monitorado ${nomeVal}, onde foi registrada justificativa para saída da zona de inclusão (perímetro delimitado) no sistema AKILES na data de ${data}, às ${hora}, conforme documento apresentado pelo monitorado que foi devidamente digitalizado e arquivado em sua pasta no Google Drive desta CME.`;
+        texto = `INFORMA-SE QUE COMPARECEU A ESTA CME O MONITORADO ${nomeVal}, ONDE FOI REGISTRADA JUSTIFICATIVA PARA SAÍDA DA ZONA DE INCLUSÃO (PERÍMETRO DELIMITADO) NO SISTEMA AKILES NA DATA DE ${data}, ÀS ${hora}, CONFORME DOCUMENTO APRESENTADO PELO MONITORADO QUE FOI DEVIDAMENTE DIGITALIZADO E ARQUIVADO EM SUA PASTA NO GOOGLE DRIVE DESTA CME.`;
         break;
       case 'just_atestado_medico':
-        texto = `${ocVal} – Informa-se que compareceu a esta CME [NOME DA PESSOA E GRAU DE PARENTESCO] do monitorado ${nomeVal}, na data de ${data}, às ${hora}, ocasião em que entregou atestado médico emitido pelo [NOME DO HOSPITAL], informando que o referido monitorado permanecerá internado no período de [PERÍODO], para tratamento médico. O documento está assinado pelo médico [NOME DO MÉDICO], CRM [NÚMERO DO CRM].`;
+        texto = `INFORMA-SE QUE COMPARECEU A ESTA CME [NOME DA PESSOA E GRAU DE PARENTESCO] DO MONITORADO ${nomeVal}, NA DATA DE ${data}, ÀS ${hora}, OCASIÃO EM QUE ENTREGOU ATESTADO MÉDICO EMITIDO PELO [NOME DO HOSPITAL], INFORMANDO QUE O REFERIDO MONITORADO PERMANECERÁ INTERNADO NO PERÍODO DE [PERÍODO], PARA TRATAMENTO MÉDICO. O DOCUMENTO ESTÁ ASSINADO PELO MÉDICO [NOME DO MÉDICO], CRM [NÚMERO DO CRM].`;
         break;
       case 'inspecao_tornozeleira':
-        texto = `${ocVal} – Informamos que foi realizada inspeção da tornozeleira eletrônica N.º ${tnzVal}, do monitorado ${nomeVal}, na data de ${data}, às ${hora}, conforme protocolo institucional vigente. Eventuais irregularidades foram registradas e encaminhadas para providências cabíveis.`;
+        texto = `INFORMAMOS QUE FOI REALIZADA INSPEÇÃO DA TORNOZELEIRA ELETRÔNICA N.º ${tnzVal}, DO MONITORADO ${nomeVal}, NA DATA DE ${data}, ÀS ${hora}, CONFORME PROTOCOLO INSTITUCIONAL VIGENTE. EVENTUAIS IRREGULARIDADES FORAM REGISTRADAS E ENCAMINHADAS PARA PROVIDÊNCIAS CABÍVEIS.`;
         break;
       case 'tempo_limite_ausencia_gprs':
-        texto = `${ocVal} – Comunica-se que o monitorado ${nomeVal} ultrapassou o tempo limite de ausência de comunicação GPRS previsto no sistema Akiles, tendo ocorrido em ${data}, às ${hora}. As medidas cabíveis foram acionadas conforme normativa interna.`;
+        texto = `COMUNICA-SE QUE O MONITORADO ${nomeVal} ULTRAPASSOU O TEMPO LIMITE DE AUSÊNCIA DE COMUNICAÇÃO GPRS PREVISTO NO SISTEMA AKILES, TENDO OCORRIDO EM ${data}, ÀS ${hora}. AS MEDIDAS CABÍVEIS FORAM ACIONADAS CONFORME NORMATIVA INTERNA.`;
         break;
       case 'permuta_servidor_plantao':
-        texto = `${ocVal} – Registra-se que houve permuta de servidor/plantão, realizada em ${data}, às ${hora}, conforme documentação anexa e em conformidade com os protocolos desta CME.`;
+        texto = `REGISTRA-SE QUE HOUVE PERMUTA DE SERVIDOR/PLANTÃO, REALIZADA EM ${data}, ÀS ${hora}, CONFORME DOCUMENTAÇÃO ANEXA E EM CONFORMIDADE COM OS PROTOCOLOS DESTA CME.`;
         break;
       case 'informativo_entrega_declaracao':
-        texto = `${ocVal} – Informamos que foi realizada entrega de declaração ao monitorado ${nomeVal} na data de ${data}, às ${hora}. O documento foi protocolado e arquivado na pasta do monitorado no Google Drive.`;
+        texto = `INFORMAMOS QUE FOI REALIZADA ENTREGA DE DECLARAÇÃO AO MONITORADO ${nomeVal} NA DATA DE ${data}, ÀS ${hora}. O DOCUMENTO FOI PROTOCOLADO E ARQUIVADO NA PASTA DO MONITORADO NO GOOGLE DRIVE.`;
         break;
       case 'informativo_atualizacao_cadastral':
-        texto = `${ocVal} – Informamos que foi realizada atualização cadastral do monitorado ${nomeVal} na data de ${data}, às ${hora}, com os dados fornecidos e arquivados conforme procedimento padrão.`;
+        texto = `INFORMAMOS QUE FOI REALIZADA ATUALIZAÇÃO CADASTRAL DO MONITORADO ${nomeVal} NA DATA DE ${data}, ÀS ${hora}, COM OS DADOS FORNECIDOS E ARQUIVADOS CONFORME PROCEDIMENTO PADRÃO.`;
         break;
       case 'alteracao_endereco_zona':
-        texto = `${ocVal} – Informa-se que o monitorado ${nomeVal} compareceu a esta CME no dia ${data}, às ${hora}, para requerer alteração de endereço e zona de inclusão para o endereço informado, para fins de atualização cadastral junto à Central de Monitoramento Eletrônico - IAPEN/CME/AP. Comprovante do novo endereço e requerimento assinado foram digitalizados e arquivados na pasta do monitorado no Google Drive desta CME.`;
+        texto = `INFORMA-SE QUE O MONITORADO ${nomeVal} COMPARECEU A ESTA CME NO DIA ${data}, ÀS ${hora}, PARA REQUERER ALTERAÇÃO DE ENDEREÇO E ZONA DE INCLUSÃO PARA O ENDEREÇO INFORMADO, PARA FINS DE ATUALIZAÇÃO CADASTRAL JUNTO À CENTRAL DE MONITORAMENTO ELETRÔNICO - IAPEN/CME/AP. COMPROVANTE DO NOVO ENDEREÇO E REQUERIMENTO ASSINADO FORAM DIGITALIZADOS E ARQUIVADOS NA PASTA DO MONITORADO NO GOOGLE DRIVE DESTA CME.`;
         break;
       default:
         texto = '';
     }
 
+    const assuntoTexto = assunto.options[assunto.selectedIndex]?.text || '';
+
+    if (assuntoTexto) {
+      texto = `${assuntoTexto.toUpperCase()}\n\n${texto}`;
+    }
+
     textoGerado.value = texto;
   }
 
-  // Atualiza o texto sempre que um campo relevante for modificado
-  [assunto, oc, alvara, nome, tnz, processo].forEach(el => {
+  [assunto, alvara, nome, tnz, tnzNova, processo].forEach(el => {
     el.addEventListener('input', gerarTexto);
   });
 
-  // Botão copiar
   btnCopiar.addEventListener('click', () => {
     textoGerado.select();
     textoGerado.setSelectionRange(0, 99999);
@@ -214,7 +223,6 @@
     alert('Texto copiado para a área de transferência!');
   });
 
-  // Gera o texto na carga inicial da página
   window.onload = gerarTexto;
 </script>
 </body>
