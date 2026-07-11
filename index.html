@@ -105,7 +105,19 @@
 <label for="nome">Nome do Monitorado:</label>
 <input id="nome" name="nome" type="text"/>
 </div>
-<div class="form-group">
+<div class="form-group" id="grpVitima" style="display:none;">
+<label for="vitima">Nome da Vítima:</label>
+<input id="vitima" type="text"/>
+</div>
+<div class="form-group" id="grpAgressor" style="display:none;">
+<label for="agressor">Nome do Agressor:</label>
+<input id="agressor" type="text"/>
+</div>
+<div class="form-group" id="grpTnz">
+<label for="tnz">Nº DPP/TNZ:</label>
+<input id="tnz" name="tnz" type="text"/>
+</div>
+<div class="form-group" id="grpTnzAntiga" style="display:none">
 <label for="tnz">TNZ ANTIGA:</label>
 <input id="tnz" name="tnz" type="text"/>
 </div>
@@ -129,7 +141,7 @@
   const form = document.getElementById('formOcorrencia');
   const assunto = document.getElementById('assunto');
     const alvara = document.getElementById('alvara');
-  const nome = document.getElementById('nome');
+  const nome=document.getElementById('nome');const vitima=document.getElementById('vitima');const agressor=document.getElementById('agressor');
   const tnz = document.getElementById('tnz');
   const tnzNova = document.getElementById('tnzNova');
   const processo = document.getElementById('processo');
@@ -169,11 +181,14 @@
         texto = `INFORMA-SE QUE FOI EFETUADO O PROCEDIMENTO DE VINCULAÇÃO AO SISTEMA AKILES DO MONITORADO ${nomeVal}, CONFORME DISPOSITIVO Nº ${tnzVal}, EM CUMPRIMENTO À DETERMINAÇÃO JUDICIAL CONSTANTE NOS AUTOS DO PROCESSO Nº ${processoVal} E ALVARÁ Nº ${alvaraVal}, NO ÂMBITO DO JUIZADO ESPECIAL DE VIOLÊNCIA DOMÉSTICA (JVD). TODOS OS DOCUMENTOS PERTINENTES AO REFERIDO PROCEDIMENTO FORAM DIGITALIZADOS E ARMAZENADOS NA PASTA DO MONITORADO NO DRIVE DESTA CME, localizado no endereço eletrônico - https://adr-correa.github.io/CME-CONTROLE-DE-OCORR-NCIA/.`;
         break;
       case 'vinc_dpp':
-        texto = `INFORMA-SE QUE FOI EFETUADO O PROCEDIMENTO DE VINCULAÇÃO AO SISTEMA AKILES DO MONITORADO ${nomeVal}, CONFORME DISPOSITIVO Nº ${tnzVal}, EM CUMPRIMENTO À DETERMINAÇÃO JUDICIAL CONSTANTE NOS AUTOS DO PROCESSO Nº ${processoVal} E ALVARÁ Nº ${alvaraVal}, NO ÂMBITO DA DELEGACIA DE POLÍCIA DA PESSOA (DPP). TODOS OS DOCUMENTOS PERTINENTES AO REFERIDO PROCEDIMENTO FORAM DIGITALIZADOS E ARQUIVADOS NA PASTA DO MONITORADO NO DRIVE DESTA CME, localizado no endereço eletrônico - https://adr-correa.github.io/CME-CONTROLE-DE-OCORR-NCIA/.`;
-        break;
+const vitimaVal=(vitima.value||'[NOME DA VÍTIMA]').toUpperCase();
+const agressorVal=(agressor.value||'[NOME DO AGRESSOR]').toUpperCase();
+texto=`VINCULAÇÃO DE DISPOSITIVO DE PROTEÇÃO PESSOAL (DPP) AO SISTEMA AKILES: INFORMA-SE QUE, NA DATA DE ${data}, ÀS ${hora.replace(':','H')}MIN, FOI REALIZADA A VINCULAÇÃO DA VÍTIMA ${vitimaVal} AO SISTEMA AKILES, MEDIANTE CADASTRAMENTO DO DISPOSITIVO DE PROTEÇÃO PESSOAL (DPP) Nº ${tnzVal}, EM CUMPRIMENTO ÀS DETERMINAÇÕES CONSTANTES NO PROCESSO JUDICIAL Nº ${processoVal}.
+REGISTRA-SE QUE O DISPOSITIVO FOI DEVIDAMENTE ASSOCIADO AO AGRESSOR ${agressorVal}, POSSIBILITANDO O MONITORAMENTO ELETRÔNICO E O GERENCIAMENTO DAS MEDIDAS PROTETIVAS DE URGÊNCIA POR MEIO DO SISTEMA AKILES. A VINCULAÇÃO FOI CONCLUÍDA COM ÊXITO, PERMANECENDO O DISPOSITIVO ATIVO E APTO PARA OPERAÇÃO, CONFORME OS PROCEDIMENTOS TÉCNICOS E ADMINISTRATIVOS DESTA CENTRAL DE MONITORAMENTO ELETRÔNICO.`;
+break;
       case 'troca_tornozeleira':
         const tnzNovaVal = (tnzNova.value.trim() || '[NOVA TNZ]').toUpperCase();
-        texto = `INFORMA-SE QUE O MONITORADO ${nomeVal} COMPARECEU NESTA CENTRAL DE MONOTARAMENTO ELETRÔNICO - CME NO DIA ${data}, ÀS ${hora.replace(':','H')}MIN, PARA INSPEÇÃO DA TORNOZELEIRA ELETRÔNICA Nº ${tnzVal}.DURANTE A INSPEÇÃO TÉCNICA DO EQUIPAMENTO, FOI CONSTATADA AVARIA NO PINO POWER JACK, COMPROMETENDO SEU ADEQUADO FUNCIONAMENTO. EM RAZÃO DA IRREGULARIDADE IDENTIFICADA, PROCEDEU-SE À SUBSTITUIÇÃO DO DISPOSITIVO, SENDO INSTALADA A TORNOZELEIRA ELETRÔNICA Nº ${tnzNovaVal}. A QUAL PERMANECEU EM PLENO FUNCIONAMENTO APÓS OS TESTES DE VERIFICAÇÃO.`;
+        texto = `INSPEÇÃO/TROCA DE TORNOZELEIRA: INFORMA-SE QUE O MONITORADO ${nomeVal} COMPARECEU NESTA CENTRAL DE MONOTARAMENTO ELETRÔNICO - CME NO DIA ${data}, ÀS ${hora.replace(':','H')}MIN, PARA INSPEÇÃO DA TORNOZELEIRA ELETRÔNICA Nº ${tnzVal}.DURANTE A INSPEÇÃO TÉCNICA DO EQUIPAMENTO, FOI CONSTATADA AVARIA NO PINO POWER JACK, COMPROMETENDO SEU ADEQUADO FUNCIONAMENTO. EM RAZÃO DA IRREGULARIDADE IDENTIFICADA, PROCEDEU-SE À SUBSTITUIÇÃO DO DISPOSITIVO, SENDO INSTALADA A TORNOZELEIRA ELETRÔNICA Nº ${tnzNovaVal}. A QUAL PERMANECEU EM PLENO FUNCIONAMENTO APÓS OS TESTES DE VERIFICAÇÃO.`;
         break;
       case 'just_saida_zona':
         texto = `INFORMA-SE QUE COMPARECEU NESTA CENTRAL DE MONITORAMENTO ELETRÔNICA - CME O MONITORADO ${nomeVal}, ONDE FOI REGISTRADA JUSTIFICATIVA PARA SAÍDA DA ZONA DE INCLUSÃO (PERÍMETRO DELIMITADO) NO SISTEMA AKILES NA DATA DE ${data}, ÀS ${hora}, CONFORME DOCUMENTO APRESENTADO PELO MONITORADO QUE FOI DEVIDAMENTE DIGITALIZADO E ARQUIVADO EM SUA PASTA NO GOOGLE DRIVE DESTA CME.`;
@@ -212,7 +227,7 @@
     textoGerado.value = texto;
   }
 
-  [assunto, alvara, nome, tnz, tnzNova, processo].forEach(el => {
+  [assunto, alvara, nome, vitima, agressor, tnz, tnzNova, processo].forEach(el => {
     el.addEventListener('input', gerarTexto);
   });
 
@@ -223,7 +238,18 @@
     alert('Texto copiado para a área de transferência!');
   });
 
-  window.onload = gerarTexto;
+  assunto.addEventListener('change', () => {
+    const isDPP = assunto.value === 'vinc_dpp';
+    const isTroca = assunto.value === 'troca_tornozeleira';
+    document.getElementById('grpVitima').style.display = isDPP ? 'flex':'none';
+    document.getElementById('grpAgressor').style.display = isDPP ? 'flex':'none';
+    alvara.closest('.form-group').style.display=(isDPP||isTroca)?'none':'flex';
+    nome.closest('.form-group').style.display=isDPP?'none':'flex';
+    tnzNova.closest('.form-group').style.display=isDPP?'none':'flex';
+    document.getElementById('grpTnz').style.display=isDPP?'flex':'none';
+    document.getElementById('grpTnzAntiga').style.display=isTroca?'flex':'none';
+    gerarTexto();
+});window.onload=()=>{assunto.dispatchEvent(new Event('change'));};
 </script>
 </footer>
 
