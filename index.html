@@ -113,19 +113,19 @@
 <label for="agressor">Nome do Agressor:</label>
 <input id="agressor" type="text"/>
 </div>
-<div class="form-group" id="grpTnz">
+<div class="form-group" id="grpTnz" style="display:none">
 <label for="tnz">Nº DPP/TNZ:</label>
 <input id="tnz" name="tnz" type="text"/>
 </div>
 <div class="form-group" id="grpTnzAntiga" style="display:none">
-<label for="tnz">TNZ ANTIGA:</label>
-<input id="tnz" name="tnz" type="text"/>
+<label for="tnzAntiga">TNZ ANTIGA:</label>
+<input id="tnzAntiga" name="tnzAntiga" type="text"/>
 </div>
 <div class="form-group">
 <label for="tnzNova">TNZ NOVA:</label>
 <input id="tnzNova" name="tnzNova" type="text"/>
 </div>
-<div class="form-group">
+<div class="form-group" id="grpProcesso">
 <label for="processo">Processo Nº:</label>
 <input id="processo" name="processo" type="text"/>
 </div>
@@ -144,6 +144,7 @@
   const nome=document.getElementById('nome');const vitima=document.getElementById('vitima');const agressor=document.getElementById('agressor');
   const tnz = document.getElementById('tnz');
   const tnzNova = document.getElementById('tnzNova');
+  const tnzAntiga=document.getElementById('tnzAntiga');
   const processo = document.getElementById('processo');
   const textoGerado = document.getElementById('textoGerado');
   const btnCopiar = document.getElementById('btnCopiar');
@@ -167,6 +168,8 @@
     const nomeVal = (nome.value.trim() || '[NOME]').toUpperCase();
     const tnzVal = (tnz.value.trim() || '[TNZ N.º]').toUpperCase();
     const processoVal = (processo.value.trim() || '[PROCESSO N.º]').toUpperCase();
+    const tnzAntigaVal=(tnzAntiga.value.trim()||'[TNZ ANTIGA]').toUpperCase();
+    const tnzNovaVal=(tnzNova.value.trim()||'[TNZ NOVA]').toUpperCase();
 
     let texto = '';
 
@@ -175,7 +178,7 @@
         texto = `INFORMA-SE QUE O MONITORADO ${nomeVal} COMPARECEU NESTA CENTRAL DE MONITORAMENTO ELETRÔNICA (CME) NO DIA ${data}, ÀS ${hora}, PARA A RETIRADA DO DISPOSITIVO DE MONITORAÇÃO ELETRÔNICA (TORNOZELEIRA) DE N.º ${tnzVal}, EM CUMPRIMENTO À DECISÃO JUDICIAL PROFERIDA NOS AUTOS DO PROCESSO Nº ${processoVal}. A DESVINCULAÇÃO FOI FORMALIZADA POR MEIO DE TERMO DE DESVINCULAÇÃO, DEVIDAMENTE ASSINADO PELO MONITORADO E PELO SERVIDOR RESPONSÁVEL PELO PROCEDIMENTO, EM CONFORMIDADE COM OS PROTOCOLOS INSTITUCIONAIS VIGENTES.`;
         break;
       case 'vinculacao':
-        texto = `INFORMA-SE QUE FOI EFETUADO O PROCEDIMENTO DE VINCULAÇÃO AO SISTEMA AKILES DO MONITORADO ${nomeVal}, CONFORME DISPOSITIVO Nº ${tnzVal}, EM CUMPRIMENTO À DETERMINAÇÃO JUDICIAL CONSTANTE NOS AUTOS DO PROCESSO Nº ${processoVal} E ALVARÁ Nº ${alvaraVal}. ADEMAIS, TODOS OS DOCUMENTOS PERTINENTES AO REFERIDO PROCEDIMENTO FORAM DIGITALIZADOS E DEVIDAMENTE ARQUIVADOS NA PASTA DO MONITORADO, DISPONÍVEL NO DRIVE DESTA CME, localizado no endereço eletrônico - https://adr-correa.github.io/CME-CONTROLE-DE-OCORR-NCIA/.`;
+        texto = `INFORMA-SE QUE FOI EFETUADO O PROCEDIMENTO DE VINCULAÇÃO AO SISTEMA AKILES DO MONITORADO ${nomeVal}, CONFORME DISPOSITIVO Nº ${tnzNovaVal}, EM CUMPRIMENTO À DETERMINAÇÃO JUDICIAL CONSTANTE NOS AUTOS DO PROCESSO Nº ${processoVal} E ALVARÁ Nº ${alvaraVal}. ADEMAIS, TODOS OS DOCUMENTOS PERTINENTES AO REFERIDO PROCEDIMENTO FORAM DIGITALIZADOS E DEVIDAMENTE ARQUIVADOS NA PASTA DO MONITORADO, DISPONÍVEL NO DRIVE DESTA CME, localizado no endereço eletrônico - https://adr-correa.github.io/CME-CONTROLE-DE-OCORR-NCIA/.`;
         break;
       case 'vinc_jvd':
         texto = `INFORMA-SE QUE FOI EFETUADO O PROCEDIMENTO DE VINCULAÇÃO AO SISTEMA AKILES DO MONITORADO ${nomeVal}, CONFORME DISPOSITIVO Nº ${tnzVal}, EM CUMPRIMENTO À DETERMINAÇÃO JUDICIAL CONSTANTE NOS AUTOS DO PROCESSO Nº ${processoVal} E ALVARÁ Nº ${alvaraVal}, NO ÂMBITO DO JUIZADO ESPECIAL DE VIOLÊNCIA DOMÉSTICA (JVD). TODOS OS DOCUMENTOS PERTINENTES AO REFERIDO PROCEDIMENTO FORAM DIGITALIZADOS E ARMAZENADOS NA PASTA DO MONITORADO NO DRIVE DESTA CME, localizado no endereço eletrônico - https://adr-correa.github.io/CME-CONTROLE-DE-OCORR-NCIA/.`;
@@ -187,8 +190,7 @@ texto=`VINCULAÇÃO DE DISPOSITIVO DE PROTEÇÃO PESSOAL (DPP) AO SISTEMA AKILES
 REGISTRA-SE QUE O DISPOSITIVO FOI DEVIDAMENTE ASSOCIADO AO AGRESSOR ${agressorVal}, POSSIBILITANDO O MONITORAMENTO ELETRÔNICO E O GERENCIAMENTO DAS MEDIDAS PROTETIVAS DE URGÊNCIA POR MEIO DO SISTEMA AKILES. A VINCULAÇÃO FOI CONCLUÍDA COM ÊXITO, PERMANECENDO O DISPOSITIVO ATIVO E APTO PARA OPERAÇÃO, CONFORME OS PROCEDIMENTOS TÉCNICOS E ADMINISTRATIVOS DESTA CENTRAL DE MONITORAMENTO ELETRÔNICO.`;
 break;
       case 'troca_tornozeleira':
-        const tnzNovaVal = (tnzNova.value.trim() || '[NOVA TNZ]').toUpperCase();
-        texto = `INSPEÇÃO/TROCA DE TORNOZELEIRA: INFORMA-SE QUE O MONITORADO ${nomeVal} COMPARECEU NESTA CENTRAL DE MONOTARAMENTO ELETRÔNICO - CME NO DIA ${data}, ÀS ${hora.replace(':','H')}MIN, PARA INSPEÇÃO DA TORNOZELEIRA ELETRÔNICA Nº ${tnzVal}.DURANTE A INSPEÇÃO TÉCNICA DO EQUIPAMENTO, FOI CONSTATADA AVARIA NO PINO POWER JACK, COMPROMETENDO SEU ADEQUADO FUNCIONAMENTO. EM RAZÃO DA IRREGULARIDADE IDENTIFICADA, PROCEDEU-SE À SUBSTITUIÇÃO DO DISPOSITIVO, SENDO INSTALADA A TORNOZELEIRA ELETRÔNICA Nº ${tnzNovaVal}. A QUAL PERMANECEU EM PLENO FUNCIONAMENTO APÓS OS TESTES DE VERIFICAÇÃO.`;
+                texto = `INSPEÇÃO/TROCA DE TORNOZELEIRA: INFORMA-SE QUE O MONITORADO ${nomeVal} COMPARECEU NESTA CENTRAL DE MONOTARAMENTO ELETRÔNICO - CME NO DIA ${data}, ÀS ${hora.replace(':','H')}MIN, PARA INSPEÇÃO DA TORNOZELEIRA ELETRÔNICA Nº ${tnzAntigaVal}. DURANTE A INSPEÇÃO TÉCNICA DO EQUIPAMENTO, FOI CONSTATADA AVARIA NO PINO POWER JACK, COMPROMETENDO SEU ADEQUADO FUNCIONAMENTO. EM RAZÃO DA IRREGULARIDADE IDENTIFICADA, PROCEDEU-SE À SUBSTITUIÇÃO DO DISPOSITIVO, SENDO INSTALADA A TORNOZELEIRA ELETRÔNICA Nº ${tnzNovaVal}. A QUAL PERMANECEU EM PLENO FUNCIONAMENTO APÓS OS TESTES DE VERIFICAÇÃO.`;
         break;
       case 'just_saida_zona':
         texto = `INFORMA-SE QUE COMPARECEU NESTA CENTRAL DE MONITORAMENTO ELETRÔNICA - CME O MONITORADO ${nomeVal}, ONDE FOI REGISTRADA JUSTIFICATIVA PARA SAÍDA DA ZONA DE INCLUSÃO (PERÍMETRO DELIMITADO) NO SISTEMA AKILES NA DATA DE ${data}, ÀS ${hora}, CONFORME DOCUMENTO APRESENTADO PELO MONITORADO QUE FOI DEVIDAMENTE DIGITALIZADO E ARQUIVADO EM SUA PASTA NO GOOGLE DRIVE DESTA CME.`;
@@ -227,7 +229,7 @@ break;
     textoGerado.value = texto;
   }
 
-  [assunto, alvara, nome, vitima, agressor, tnz, tnzNova, processo].forEach(el => {
+  [assunto, alvara, nome, vitima, agressor, tnz, tnzAntiga, tnzNova, processo].forEach(el => {
     el.addEventListener('input', gerarTexto);
   });
 
@@ -248,6 +250,7 @@ break;
     tnzNova.closest('.form-group').style.display=isDPP?'none':'flex';
     document.getElementById('grpTnz').style.display=isDPP?'flex':'none';
     document.getElementById('grpTnzAntiga').style.display=isTroca?'flex':'none';
+    document.getElementById('grpProcesso').style.display=isTroca?'none':'flex';
     gerarTexto();
 });window.onload=()=>{assunto.dispatchEvent(new Event('change'));};
 </script>
